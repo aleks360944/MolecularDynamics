@@ -1,0 +1,10 @@
+# Compiled programs and build output
+*.exe
+*.obj
+*.pdb
+/build/
+/cmake-build-*/
+
+# IDE-generated files
+/.vs/
+/.idea/
