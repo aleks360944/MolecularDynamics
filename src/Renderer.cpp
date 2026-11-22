@@ -47,7 +47,7 @@ void Renderer::processEvents() {
             window.close();
         }
         
-        //Отдаление камеры
+        // Отдаление и приближение камеры колесиком
         if (const auto* wheel = event->getIf<sf::Event::MouseWheelScrolled>()) {
             if (wheel->wheel == sf::Mouse::Wheel::Vertical) {
                 const float minZoom = 0.1f;
@@ -67,23 +67,34 @@ void Renderer::processEvents() {
             }
         }
 
-        // 1. Нажали ЛКМ — запомнили начальную позицию
+        // Нажатие кнопок мыши (ЛКМ — спавн частиц, ПКМ — перемещение камеры)
         if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>()) {
             if (mousePressed->button == sf::Mouse::Button::Left) {
                 dragStartPosition = mousePressed->position;
                 dragCurrentPosition = mousePressed->position;
                 isDragging = true;
             }
+            else if (mousePressed->button == sf::Mouse::Button::Right) {
+                isPanning = true;
+                lastPanMousePos = mousePressed->position;
+            }
         }
 
-        // 2. Двигаем мышь — обновляем текущую позицию
+        // Движение мыши
         if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>()) {
             if (isDragging) {
                 dragCurrentPosition = mouseMoved->position;
             }
+            if (isPanning) {
+                sf::Vector2f oldPos = window.mapPixelToCoords(lastPanMousePos, cameraView);
+                sf::Vector2f newPos = window.mapPixelToCoords(mouseMoved->position, cameraView);
+
+                cameraView.move(oldPos - newPos);
+                lastPanMousePos = mouseMoved->position;
+            }
         }
 
-        // 3. Отпустили ЛКМ — фиксируем конечную позицию для main.cpp
+        // Отпускание кнопок мыши
         if (const auto* mouseReleased = event->getIf<sf::Event::MouseButtonReleased>()) {
             if (mouseReleased->button == sf::Mouse::Button::Left && isDragging) {
                 dragCurrentPosition = mouseReleased->position;
@@ -92,6 +103,9 @@ void Renderer::processEvents() {
                     dragStartPosition,
                     dragCurrentPosition
                 };
+            }
+            else if (mouseReleased->button == sf::Mouse::Button::Right) {
+                isPanning = false;
             }
         }
     }

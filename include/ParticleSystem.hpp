@@ -10,8 +10,8 @@
 #include "LennardJones.hpp"
 
 namespace SimulationWorld {
-inline constexpr double Width = 19.0;
-inline constexpr double Height = 10.0;
+inline constexpr double Width = 20.0;
+inline constexpr double Height = 20.0;
 inline constexpr double PixelsPerUnit = 100.0;
 }
 

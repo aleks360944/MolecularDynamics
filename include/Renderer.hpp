@@ -19,10 +19,15 @@ private:
     sf::Font font;
     bool fontLoaded = false;
 
+    // Для создания частиц (ЛКМ)
     std::optional<ParticleSpawnDrag> pendingParticleDrag;
     sf::Vector2i dragStartPosition;
     sf::Vector2i dragCurrentPosition;
     bool isDragging = false;
+
+    // Для перемещения камеры (ПКМ)
+    bool isPanning = false;
+    sf::Vector2i lastPanMousePos;
 
 public:
     Renderer(unsigned int width, unsigned int height, bool fullscreen = false);
